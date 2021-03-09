@@ -10,10 +10,10 @@ const int RADIX = 20;
 class Monom
 {
 protected:
-	int coeff;
+	double coeff;
 	int degr_con;
 public:
-	Monom(int _coef=1 , int x_deg=0 , int y_deg=0,int z_deg=0) 
+	Monom(double _coef=1 , int x_deg=0 , int y_deg=0,int z_deg=0)
 	{
 		coeff = _coef;
 		degr_con = x_deg * RADIX* RADIX + y_deg * RADIX + z_deg;
@@ -21,8 +21,8 @@ public:
 	void makeHead() { coeff = 0;degr_con = -1; }
 	Monom& operator=(const Monom& m) { coeff = m.coeff; degr_con = m.degr_con; return *this; }
 	int operator==(const Monom& m) { return (coeff == m.coeff) && (degr_con == m.degr_con); }
-	void setCoeff(int c) { coeff = c; }
-	int getCoeff() { return coeff; }
+	void setCoeff(double c) { coeff = c; }
+	double getCoeff() { return coeff; }
 	void getDeg(int& deg_x,int& deg_y, int& deg_z) 
 	{ 
 		int deg_tmp = degr_con;
@@ -35,6 +35,7 @@ public:
 		deg_z = deg_tmp % RADIX;
 	
 	}
+	int getConv() { return degr_con; }
 	void getDeg (int& deg_x, int& deg_y, int& deg_z) const
 	{
 		int deg_tmp = degr_con;
@@ -61,11 +62,6 @@ public:
 	}
 	Monom& getMaxMon(Monom& m1)
 	{
-		if (this->maxDeg() > m1.maxDeg())
-			return *this;
-		else if (this->maxDeg() < m1.maxDeg())
-			return m1;
-		else {
 			int x, y, z;
 			int x1, y1, z1;
 			this->getDeg(x, y, z);
@@ -82,12 +78,17 @@ public:
 				return *this;
 			if (z1 > z)
 				return m1;
-		}
+		
 	}
 	bool areSiml(Monom& m){ return degr_con == m.degr_con; }
 	friend std::ostream& operator<< (std::ostream& o, const Monom& m)
 	{
-		o << m.coeff<<"*";
+		if (m.coeff == 0)
+			return o;
+		if(m.coeff>0)
+		o << "+"<<m.coeff;
+		else 
+			o << m.coeff;
 		int x, y, z;
 		m.getDeg(x,y,z);
 		if (x > 0)

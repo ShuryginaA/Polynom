@@ -80,6 +80,35 @@ public:
 				return m1;
 		
 	}
+
+	double calk(double x, double y,double z) 
+	{
+		double res_x=1,res_y=1,res_z=1;
+		int _x, _y, _z;
+		double c = this->coeff;
+		this->getDeg(_x, _y, _z);
+		if (x == 0) {
+			if (_x != 0)
+				res_x = 0;
+		}
+		else res_x = exp(_x * log(x));
+		
+		if (y == 0) {
+			if (_y != 0)
+				res_y = 0;
+		}
+		else res_y = exp(_y * log(x));
+
+		
+		if (z == 0) {
+			if (_z != 0)
+				res_z = 0;
+		}
+		else res_z = exp(_z * log(x));
+		
+		return c * res_x * res_y * res_z;
+
+	}
 	bool areSiml(Monom& m){ return degr_con == m.degr_con; }
 	friend std::ostream& operator<< (std::ostream& o, const Monom& m)
 	{

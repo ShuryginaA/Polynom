@@ -1,6 +1,7 @@
 #pragma once
 #include "monom.h"
 #include <list>
+#include <cmath>
 #include "List.h"
 
 struct Node
@@ -17,8 +18,8 @@ public:
 
 	Polynom operator +(Polynom& p);
 	Polynom operator -(Polynom& p1);
-	Polynom operator *(Polynom& p);
-	Polynom& calculation(const Polynom& p1);
+	Polynom operator *(Polynom& p1);
+	double calculation( double x, double y, double z);
 
 	void getDegr(int state, string _s, double& c, int& x, int& y, int& z);
 	void input(string s);
@@ -94,20 +95,7 @@ inline Polynom Polynom::operator+( Polynom & p1)
 		throw "Input polynom is empty";
 	while (_p1!= p1.head && _p2!= head)
 	{
-		/*if (res.isEmpty()==false &&_p1->mon.areSiml(res.getLast().mon))
-		{
-			
-			res.getLast().mon.setCoeff(res.getLast().mon.getCoeff() + _p1->mon.getCoeff());
-			_p1 = _p1->next;
-		}
-		else if(res.isEmpty()==false && _p2->mon.areSiml(res.getLast().mon))
-		{
-			
-			res.getLast().mon.setCoeff(res.getLast().mon.getCoeff() + _p2->mon.getCoeff());
-			_p2 = _p2->next;
-		}
-      
-		else*/ if (_p1->mon.areSiml(_p2->mon))
+	    if (_p1->mon.areSiml(_p2->mon))
 		{
 			
 			Monom newM(_p1->mon);
@@ -178,6 +166,43 @@ inline Polynom Polynom::operator-( Polynom& p1)
 	{
 		res.push_back(_p1->mon);
 		_p1 = _p1->next;
+	}
+	return res;
+}
+
+inline Polynom Polynom::operator*(Polynom& p1)
+{
+	Polynom res;
+	Node* _p1 = p1.head->next;
+	Node* _p2 = head->next;
+	if (this->isEmpty() || p1.isEmpty())
+		throw "Input polynom is empty";
+	while (_p1 != p1.head )
+	{
+		_p2 = head->next;
+		while (_p2 != head)
+		{
+			Monom m;
+			m.coeff = _p1->mon.getCoeff() * _p2->mon.getCoeff();
+			m.degr_con = _p1->mon.degr_con + _p2->mon.degr_con;
+			res.push(res, m);
+			_p2 = _p2->next;
+		}
+		_p1 = _p1->next;
+	}
+	
+	return res;
+}
+
+inline double Polynom::calculation(double x, double y, double z)
+{
+
+	Node* tmp = this->head->next;
+	double res = 0;
+	while (tmp != head)
+	{	
+		res += tmp->mon.calk(x, y, z);
+		tmp = tmp->next;
 	}
 	return res;
 }
@@ -262,7 +287,6 @@ inline void Polynom::input(string s)
 		}		
 		getDegr(state, _s, c, x, y, z);
 		Monom m(c, x, y, z);
-		/*this->push_back(m);*/
 
 		this->push(*this,m);
 	}
